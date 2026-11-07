@@ -87,6 +87,31 @@ label:has(input:focus-visible) input:focus-visible { outline: none; }
 @supports (-webkit-touch-callout: none) {
   html { scroll-behavior: auto; }
 }
+/* Framed example photos. Logos, icons and the configurator watch stay square. */
+:root { --aw-photo-radius: 9px; }
+@media (min-width: 768px) {
+  :root { --aw-photo-radius: 12px; }
+}
+.aw-photo {
+  border-radius: var(--aw-photo-radius);
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+.aw-photo > img {
+  border-radius: inherit;
+}
+.aw-photo-tag { border-radius: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .aw-photo > img {
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .aw-photo:hover > img {
+    transform: scale(1.035);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -94,6 +119,7 @@ label:has(input:focus-visible) input:focus-visible { outline: none; }
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
   }
+  .aw-photo:hover > img { transform: none; }
 }
 
 </style>
@@ -168,7 +194,7 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
 <span id="top" style="display:block;scroll-margin-top:calc(76px + env(safe-area-inset-top,0px))"></span>
 <section id="inhalt" tabIndex="-1" data-dark="" aria-labelledby="hero-h" style="scroll-margin-top:calc(76px + env(safe-area-inset-top,0px));background:linear-gradient(180deg,#101820,#14283f);color:#f3f0e8;outline:none">
   <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,112px) clamp(20px,4.5vw,64px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(40px,5vw,80px)">
-    <div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:28px">
+    <div class="aw-hero-copy" style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:28px">
       <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#c5d4e4">Atelier W, Schweiz</p>
       <h1 id="hero-h" style="margin:0;font-family:'Cormorant Garamond',Palatino,'Palatino Linotype',Georgia,serif;font-weight:500;font-size:clamp(3rem,7.4vw,7.2rem);line-height:1;letter-spacing:-0.01em;text-wrap:balance">Was euch verbindet.<br><em style="font-style:italic;color:#c5d4e4">Für immer am Handgelenk.</em></h1>
       <p style="margin:0;max-width:34em;font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:#e6edf3;text-wrap:pretty">Personalisierte Uhren für Vereine, Unternehmen und private Anlässe. Euer Zeichen auf dem Zifferblatt, eure Worte im Gehäuseboden.</p>
@@ -177,10 +203,10 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
         <a href="#konfigurator" style="display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 26px;border:1px solid rgba(197,212,228,0.55);color:#f3f0e8;text-decoration:none;font-weight:600;font-size:16px;border-radius:2px;transition:border-color 200ms,background 200ms" style-hover="border-color:#f3f0e8;background:rgba(243,240,232,0.06);color:#f3f0e8">Uhr gestalten</a>
       </div>
     </div>
-    <figure style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
-      <div style="position:relative;aspect-ratio:4/5;max-height:78svh;background:#101820;overflow:hidden">
+    <figure class="aw-hero-figure" style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
+      <div class="aw-photo" style="position:relative;aspect-ratio:4/5;max-height:78svh;background:#101820;overflow:hidden">
         <img id="img-hero" alt="Stahlarmbanduhr mit metallblauem Sonnenschliff-Zifferblatt vor dunklem Hintergrund" src="assets/img/hero-4x5.webp" srcset="assets/img/hero-4x5-800.webp 800w, assets/img/hero-4x5.webp 1440w" sizes="(min-width: 900px) 46vw, 92vw" width="1440" height="1800" fetchPriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+        <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
       </div>
       <figcaption style="font-size:13px;line-height:1.5;color:#c5d4e4">Stahlarmbanduhr mit metallblauem Sonnenschliff. Beispielbild, kein Kundenauftrag.</figcaption>
     </figure>
@@ -230,9 +256,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
   <div style="max-width:1440px;margin:0 auto;padding:clamp(64px,9vw,136px) clamp(20px,4.5vw,64px);display:flex;flex-direction:column;gap:clamp(72px,10vw,160px)">
     <article id="geschichte-verein" style="scroll-margin-top:calc(100px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,5vw,96px)">
       <figure style="flex:7 1 460px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <div style="position:relative;aspect-ratio:3/2;background:#14283f;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:3/2;background:#14283f;overflow:hidden">
           <img id="img-club-story" alt="Blaue Uhr mit kleinem Fussballwappen auf einem dunkelblauen Strickschal mit hellen Streifen" src="assets/img/club-3x2.webp" width="1440" height="960" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Wappen auf marineblauem Zifferblatt, Schal in Vereinsfarben.</figcaption>
       </figure>
@@ -246,9 +272,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
 
     <article id="geschichte-unternehmen" style="scroll-margin-top:calc(100px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;flex-direction:row-reverse;align-items:center;gap:clamp(32px,5vw,96px)">
       <figure style="flex:6 1 420px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <div style="position:relative;aspect-ratio:4/5;max-height:760px;background:#e7e2d6;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:4/5;max-height:760px;background:#e7e2d6;overflow:hidden">
           <img id="img-company-story" alt="Zwei Uhren, Front und gravierter Boden «25 Jahre», in einem offenen marineblauen Etui" src="assets/img/company-4x5.webp" width="1440" height="1800" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Front und gravierter Boden «25 Jahre» – eine Bildstudie.</figcaption>
       </figure>
@@ -262,9 +288,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
 
     <article id="geschichte-privat" style="scroll-margin-top:calc(100px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;align-items:center;gap:clamp(32px,5vw,96px)">
       <figure style="flex:7 1 460px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
-        <div style="position:relative;aspect-ratio:16/10;background:#e7e2d6;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:16/10;background:#e7e2d6;overflow:hidden">
           <img id="img-private-story" alt="Uhrenboden mit Gravur «L + M» und Datum auf hellem Leinen, daneben zwei Ringe" src="assets/img/private-16x10.webp" width="1440" height="900" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Initialen und Datum sind das Motiv einer Bildstudie, kein Kundenauftrag.</figcaption>
       </figure>
@@ -287,9 +313,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
         <p style="margin:8px 0 0;font-size:19px;line-height:1.55;color:#5c6570;max-width:30em;text-wrap:pretty">Fünf Schritte als Orientierung. Den konkreten Weg, die Ausführung und den Termin klären wir gemeinsam mit euch.</p>
       </div>
       <figure style="flex:0 1 380px;min-width:0;margin:0;display:flex;flex-direction:column;gap:10px">
-        <div style="position:relative;aspect-ratio:3/2;background:#e7e2d6;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:3/2;background:#e7e2d6;overflow:hidden">
           <img id="img-sketch-process" alt="Entwurfszeichnung einer Uhr mit losen Komponenten und Farbproben" src="assets/img/sketch-3x2.webp" width="1440" height="960" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:12px;left:12px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:12px;left:12px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Entwurfsskizze mit Komponenten und Farbproben.</figcaption>
       </figure>
@@ -568,9 +594,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
 <section id="atelier" data-dark="" aria-labelledby="at-h" style="scroll-margin-top:calc(76px + env(safe-area-inset-top,0px));background:#101820;color:#f3f0e8">
   <div style="max-width:1440px;margin:0 auto;padding:clamp(64px,9vw,136px) clamp(20px,4.5vw,64px);display:flex;flex-wrap:wrap;align-items:center;gap:clamp(40px,6vw,104px)">
     <figure style="flex:7 1 480px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
-      <div style="position:relative;aspect-ratio:5/4;background:#14283f;overflow:hidden">
+      <div class="aw-photo" style="position:relative;aspect-ratio:5/4;background:#14283f;overflow:hidden">
         <img id="img-atelier" alt="Hände mit Pinzette an einem offenen Uhrwerk im gedämpften Werkbanklicht" src="assets/img/atelier-5x4.webp" width="1440" height="1152" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+        <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
       </div>
       <figcaption style="font-size:13px;line-height:1.5;color:#c5d4e4">Beispielbild – illustrative Atelierszene, keine Aufnahme des Kundenbetriebs.</figcaption>
     </figure>
@@ -595,16 +621,16 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(20px,3vw,40px)">
       <figure style="margin:0;display:flex;flex-direction:column;gap:12px">
-        <div style="position:relative;aspect-ratio:4/3;background:#e7e2d6;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:4/3;background:#e7e2d6;overflow:hidden">
           <img id="img-dials" alt="Vier Zifferblätter in Metallblau, Silber, Graphit und Elfenbein, daneben Zeiger" src="assets/img/dials-4x3.webp" width="1440" height="1080" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Zifferblätter in vier Farben, mit Zeigern. Keine Lagerware.</figcaption>
       </figure>
       <figure style="margin:0;display:flex;flex-direction:column;gap:12px">
-        <div style="position:relative;aspect-ratio:4/3;background:#c5ced6;overflow:hidden">
+        <div class="aw-photo" style="position:relative;aspect-ratio:4/3;background:#c5ced6;overflow:hidden">
           <img id="img-materials" alt="Makroaufnahme von gebürstetem Stahl, Glas und blauer Guilloché-Struktur" src="assets/img/materials-4x3.webp" width="1440" height="1080" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-          <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+          <span class="aw-photo-tag" style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
         </div>
         <figcaption style="font-size:13px;color:#5c6570">Gebürsteter Stahl, Glas und Guilloché im Detail.</figcaption>
       </figure>
@@ -635,9 +661,9 @@ label:has(input:focus-visible) input:focus-visible{outline:none}
       <sc-for list="{{ gallery }}" as="b" hint-placeholder-count="6">
         <li>
           <figure style="margin:0;display:flex;flex-direction:column;gap:12px">
-            <div style="position:relative;aspect-ratio:{{ b.ratio }};background:#e7e2d6;overflow:hidden">
+            <div class="aw-photo" style="position:relative;aspect-ratio:{{ b.ratio }};background:#e7e2d6;overflow:hidden">
               <img id="{{ b.id }}" alt="{{ b.alt }}" src="{{ b.src }}" width="{{ b.w }}" height="{{ b.h }}" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-              <span style="position:absolute;top:12px;left:12px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
+              <span class="aw-photo-tag" style="position:absolute;top:12px;left:12px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
             </div>
             <figcaption style="display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(28,30,34,0.14);padding-top:12px">
               <span style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#28496f">{{ b.k }}</span>
