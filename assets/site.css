@@ -1,0 +1,45 @@
+/* Published-page adjustments. The visual system stays in the page template. */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  height: auto;
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100%;
+  height: auto;
+  background: #f3f0e8;
+  color: #1c1e22;
+  font-family: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+*, *::before, *::after { box-sizing: border-box; }
+img { max-width: 100%; }
+#dc-root, #dc-root > .sc-host { height: auto; min-height: 100%; }
+a, button, label, summary { -webkit-tap-highlight-color: rgba(197, 212, 228, 0.45); }
+/* Labels are the tap target for the field beneath them. */
+label { min-height: 44px; display: inline-flex; align-items: center; }
+::placeholder { color: #4e565f; opacity: 1; }
+label:has(input:focus-visible) {
+  outline: 2px solid #1f3a5f;
+  outline-offset: 3px;
+}
+label:has(input:focus-visible) input:focus-visible { outline: none; }
+[data-dark] label:has(input:focus-visible) { outline-color: #f3f0e8; }
+
+/* iOS Safari: CSS smooth-scroll fights the sticky header and the URL bar. */
+@media (hover: none), (pointer: coarse) {
+  html { scroll-behavior: auto; }
+}
+@supports (-webkit-touch-callout: none) {
+  html { scroll-behavior: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
