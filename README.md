@@ -1,53 +1,91 @@
-# Atelier W – Website-Demonstration
+# Atelier W – Website-Demonstration (statisch)
 
-Statische Website, ohne Build-Schritt lauffähig. Drei Seiten: `index.html` (Onepage mit Konfigurator und Anfrageformular), `impressum.html`, `datenschutz.html`.
+Reines HTML, CSS und JavaScript – ohne Framework, ohne Build-Schritt, ohne externe Dienste.
+`index.html` lässt sich direkt im Browser öffnen oder auf jedem statischen Hosting (z. B. GitHub Pages, auch im Unterordner) betreiben.
+
+## Dateistruktur
+
+```
+index.html              Startseite (Onepage: Hero, Anlässe, Geschichten, Ablauf, Konfigurator,
+                        Atelier, Materialien, Beispielbilder, Fragen, Anfrage)
+impressum.html          Impressum (mit Platzhaltern)
+datenschutz.html        Datenschutz (mit Platzhaltern)
+.nojekyll               GitHub Pages liefert alle Dateien unverändert aus
+README.md               diese Datei
+
+assets/css/styles.css   Schriften, Grundlagen, Zustände (Menü, Konfigurator, Formular, FAQ),
+                        gerundete Fotos, Intro-Grundgerüst, Hover-Regeln (unten in der Datei)
+assets/js/intro.js      Intro-Animation  ← Zeiten hier anpassen (siehe unten)
+assets/js/app.js        Seitenlogik: Menü, aktive Navigation, Ablauf-Linien, Konfigurator,
+                        Anfrageformular (Demo, kein Versand), FAQ
+assets/fonts/           Cormorant Garamond und Source Sans 3 als WOFF2 (lokal) + Lizenzen (OFL)
+assets/img/             Beispielbilder als WebP, je 1440 px und 720 px breit (-720.webp)
+assets/logo/            Original-Logo schwarz und weiss (SVG, unverändert)
+assets/icons/           Favicon (SVG, PNG 32 px) und Apple-Touch-Icon (180 px)
+```
+
+Die meisten Gestaltungswerte (Abstände, Farben, Schriftgrössen) stehen wie im Design-Projekt direkt im HTML.
+
+## Intro
+
+Gesteuert von **`assets/js/intro.js`**. Ganz oben in der Datei steht die Tabelle `T` mit allen Zeiten in Sekunden:
+
+```js
+var T = {
+  stageIn:  [0.00, 0.70], // Bühne blendet ein
+  rim:      [0.10, 1.40], // Rand zeichnet sich um den Gehäuseboden
+  disc:     [0.25, 1.30], // Gehäuseboden blendet ein
+  screws:   [0.70, 1.40], // Schrauben erscheinen nacheinander
+  line1:    [1.60, 3.00], // Gravur Zeile 1 («Für Anna»)
+  line2:    [3.20, 4.35], // Gravur Zeile 2 (Datum)
+  flip:     [4.80, 5.95], // Drehung zum Zifferblatt
+  hands:    [5.40, 6.45], // Zeiger laufen auf 10:10
+  tagline:  [6.00, 6.60], // «Jede Uhr ein Unikat.»
+  progress: [0.20, 6.50], // Fortschrittslinie
+  out:      [6.80, 7.90]  // Logo fliegt in den Header, Crossfade zur Startseite
+};
+```
+
+- Jede Phase ist `[Beginn, Ende]`. Die Lücken zwischen den Phasen sind die ruhigen Stehmomente.
+- Die Gesamtdauer ist `T.out[1]` (aktuell 7,9 s). Zum Verlängern oder Kürzen die nachfolgenden Werte gleichmässig verschieben.
+- Darunter: `SHORT` (kurze Einblendung bei «Bewegung reduzieren», ca. 1 s), die Texte `LINE1`, `LINE2`, `TAGLINE` und die Fortschritts-Beschriftungen `LABELS` mit ihren Startzeiten.
+
+Wann welche Version läuft, entscheidet ein kurzes Skript im `<head>` von `index.html`:
+
+| Fall | Verhalten |
+|---|---|
+| erster Aufruf in der Browser-Sitzung | volles Intro (ca. 7,9 s), Knopf «Überspringen», Escape überspringt ebenfalls |
+| weitere Aufrufe in derselben Sitzung | kein Intro (Merker `aw-intro-seen` im sessionStorage) |
+| Systemeinstellung «Bewegung reduzieren» | nur kurze Einblendung des Logos |
+| JavaScript deaktiviert | kein Intro, Seite sofort lesbar |
+
+Zum erneuten Testen: neuen Tab/privates Fenster öffnen oder in der Konsole `sessionStorage.clear()` ausführen.
 
 ## Auf GitHub Pages veröffentlichen
 
-1. Auf GitHub ein neues Repository anlegen, z. B. `atelier-w-demo` (öffentlich – GitHub Pages für private Repositories braucht ein kostenpflichtiges Konto).
-2. Im Repository **Add file → Upload files** wählen und den **Inhalt dieses Ordners** hineinziehen (`index.html`, `impressum.html`, `datenschutz.html`, die JS-Dateien sowie die Ordner `assets` und `vendor`). `index.html` muss ganz oben im Repository liegen. **Commit changes**.
-3. **Settings → Pages**: Source «Deploy from a branch», Branch `main`, Ordner `/ (root)` → **Save**.
-4. Nach ein bis zwei Minuten ist die Seite erreichbar unter `https://BENUTZERNAME.github.io/atelier-w-demo/`.
+1. Repository anlegen, z. B. `atelier-w-demo` (öffentlich).
+2. **Add file → Upload files**: den *Inhalt* dieses Ordners hochladen (`index.html` muss oben im Repository liegen). Die versteckte Datei `.nojekyll` mitnehmen, falls sichtbar – sie ist optional.
+3. **Settings → Pages**: «Deploy from a branch», Branch `main`, Ordner `/ (root)`.
+4. Nach ein bis zwei Minuten: `https://BENUTZERNAME.github.io/atelier-w-demo/`
 
-Alle Pfade sind relativ – die Seite funktioniert auch in einem Unterordner oder unter einem Repository-Unterpfad.
-Die versteckte Datei `.nojekyll` ist optional; sie sorgt nur dafür, dass GitHub die Dateien unverändert ausliefert.
+Alle Pfade sind relativ; die Seite läuft daher auch im Unterordner.
 
-## Lokal testen
+## Technik und Barrierefreiheit
 
-Im Ordner ein Terminal öffnen und einen kleinen Webserver starten:
-
-```
-python3 -m http.server 8000
-```
-
-Dann `http://localhost:8000` im Browser öffnen. (Ein lokaler Server entspricht dem Verhalten auf GitHub Pages besser als ein Doppelklick auf die HTML-Datei.)
-
-## Struktur
-
-```
-index.html            Hauptseite
-impressum.html        Impressum (mit Platzhaltern)
-datenschutz.html      Datenschutz (mit Platzhaltern)
-support.js            Lokale Laufzeit, die die Seitenvorlage mit React rendert
-intro.js              Intro-Animation (entfällt bei «Bewegung reduzieren»)
-vendor/               React 18.3.1 und React DOM 18.3.1, lokal
-assets/fonts/         Cormorant Garamond und Source Sans 3 (lateinisch, lokal)
-assets/img/           Beispielbilder (WebP)
-assets/logo/          Original-Logo, schwarz und weiss
-assets/site.css       Anpassungen für Veröffentlichung (Scrollen, Fokus, Safe Area)
-```
-
-Die Seitenvorlage steht in `index.html` in `<template id="dc-src">`, die Logik im `<script type="text/x-dc">` danach. Fotos sind normale `<img>`-Elemente auf die Dateien in `assets/img`. Das Hero-Bild hat zusätzlich eine kleinere Variante für schmale Viewports. Schriften und die wenigen Zusatzregeln sind im HTML eingebunden, dieselben Dateien liegen unter `assets/fonts` und `assets/site.css`. Es gibt keine Verbindung zu einem CDN und kein Editor-Element für Bilder.
+- Animationen laufen über `transform` und `opacity`; Farbwechsel der SVG-Uhr sind kurze Überblendungen. Die Unschärfe beim Intro-Ausgang gibt es nur auf Geräten mit Maus/Trackpad.
+- Hover-Effekte nur auf Geräten mit Maus/Trackpad (`@media (hover: hover) and (pointer: fine)`); auf Touch-Geräten gibt es stattdessen eine Rückmeldung beim Antippen (`:active`).
+- Fotos: 9 px Rundung auf dem Handy, 12 px ab 768 px Breite; der Hover-Zoom wird von der Rundung abgeschnitten. Logo und Konfigurator-Uhr bleiben eckig.
+- Skip-Link «Zum Inhalt», echte Buttons und Radio-Gruppen, Fehlermeldungen mit `aria-invalid`/`aria-describedby`, Live-Regionen für Statusmeldungen, `prefers-reduced-motion` wird respektiert.
 
 ## Grenzen der Demo
 
-- Das Anfrageformular sendet nichts; Konfiguration und Eingaben bleiben nur im geöffneten Fenster. Kein Backend, keine Cookies, kein localStorage. Nach dem Abschluss erscheint eine Bestätigung auf der Seite.
-- Die Logo-Datei im Formular wird weder gelesen noch hochgeladen; nur der Dateiname wird angezeigt.
-- Die Schriften werden von derselben Website geladen.
+- Das Anfrageformular sendet nichts. Angaben bleiben nur im geöffneten Fenster; kein Backend, keine Cookies, kein localStorage. Nach «Demo-Anfrage abschliessen» erscheint eine Bestätigung auf der Seite.
+- Die Logo-Datei im Formular wird weder gelesen noch hochgeladen; nur Dateiname und Typ werden angezeigt.
 - `noindex, nofollow` ist gesetzt – vor einem Livegang bewusst ändern.
+- Alle Fotografien sind Beispielbilder und keine Kundenaufträge.
 
 ## Offene Angaben (Platzhalter)
 
 `[[RECHTSFORM]]`, `[[INHABER / VERTRETUNGSBERECHTIGTE PERSON]]`, `[[STRASSE UND HAUSNUMMER]]`, `[[PLZ UND ORT]]`, `[[E-MAIL]]`, `[[TELEFON]]`, `[[UID / MWST-STATUS]]`, `[[HANDELSREGISTER / FALLS ZUTREFFEND]]`, `[[DATENSCHUTZKONTAKT]]`, `[[HOSTINGANBIETER UND LAND]]`, `[[HOSTING-LOGS: ZWECK UND AUFBEWAHRUNG]]`, `[[STAND DER DATENSCHUTZERKLÄRUNG]]`
 
-Alle Fotografien sind Beispielbilder und keine Kundenaufträge. Impressum und Datenschutz vor einem Livebetrieb rechtlich prüfen lassen.
+Impressum und Datenschutz vor einem Livebetrieb rechtlich prüfen lassen.
