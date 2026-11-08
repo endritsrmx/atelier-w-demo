@@ -1,4 +1,4 @@
-/* Atelier W – Seitenlogik (ohne Framework)
+/* Atelier AW – Seitenlogik (ohne Framework)
  * Menü, aktive Navigation, Ablauf-Linien, Konfigurator, Anfrageformular (Demo, kein Versand) und FAQ.
  * Alle Eingaben bleiben im Arbeitsspeicher der geöffneten Seite.
  */
@@ -15,7 +15,7 @@
   $$('[data-year]').forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
 
 
-  /* ───────────── Daten (laut Datenblättern Atelier W) ───────────── */
+  /* ───────────── Daten (laut Datenblättern Atelier AW) ───────────── */
   var MODELS = {
     classico: { label: 'Classico Titanio', metal: 'Titan', sizes: [{ id: '36', label: '36 mm', sub: 'Zifferblatt 28,5 mm', r: 135, dr: 107 }, { id: '39', label: '39 mm', sub: 'Zifferblatt 33,5 mm', r: 146, dr: 126 }],
       dials: [{ id: 'eisblau', label: 'Eisblau', c: '#a8d4ec', light: true }, { id: 'nachtblau', label: 'Nachtblau', c: '#1c2f6e' }, { id: 'violett', label: 'Violett', c: '#7a2a9e' }, { id: 'gruen', label: 'Tannengrün', c: '#1d6a46' }, { id: 'braun', label: 'Mokka', c: '#6a4a36' }, { id: 'schwarz', label: 'Schwarz', c: '#1a1b1e' }],
