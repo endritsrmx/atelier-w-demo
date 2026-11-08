@@ -13,7 +13,6 @@
   var fine = mq('(hover: hover) and (pointer: fine)').matches;
 
   $$('[data-year]').forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
-  if (!d.getElementById('cfg')) return; // Unterseiten brauchen nur das Jahr
 
 
   /* ───────────── Daten (laut Datenblättern Atelier W) ───────────── */
@@ -101,9 +100,9 @@
     } else proc.classList.add('is-on');
   }
 
-  /* ───────────── Konfigurator ───────────── */
-  var cfgEl = d.getElementById('cfg');
-  var cfg = assign(DEFAULT, {}), adopted = false, engFocused = false;
+  /* ───────────── Konfigurator (konfigurator.html) ───────────── */
+  function initCfg() {
+  var cfg = assign(DEFAULT, {}), engFocused = false;
   var annT = null, noticeT = null;
   var dialInput = d.getElementById('cfg-dialtext'), engInput = d.getElementById('cfg-engraving');
   var watchImg = d.getElementById('watch-img');
@@ -396,7 +395,6 @@
     setT('priceDetail', cfg.rotor === 'farbig' ? 'Grundpreis CHF 395.– und farbiger Rotor +CHF 35.–' : 'Grundpreis CHF 395.–, Standard-Rotor');
     watchImg.setAttribute('aria-label', 'Skizze der Uhr, Ansicht ' + (front ? 'Zifferblatt' : 'Gehäuseboden') + ': ' + cfgSentence() + '. Zifferblatt-Text: ' + (cfg.dialText.trim() || 'kein Text') + '. Gravur: ' + (cfg.engraving.trim() || 'keine Gravur') + '. Richtpreis ' + chf(price()) + '.');
     setT('cfgLine', [M().label, size().label, dial().label, STRAPS[cfg.strap].label, cfg.back === 'glas' ? 'Glasboden' : 'Boden geschlossen', cfg.rotor === 'farbig' ? 'Rotor ' + byId(RCOL, cfg.rcol).label : 'Rotor Standard'].join(' · '));
-    renderSummary();
   }
   var lastPrice = null;
   function setCfg(patch) {
@@ -410,7 +408,6 @@
     annT = setTimeout(function () {
       setT('announce', viewOnly ? 'Ansicht: ' + (cfg.view === 'back' ? 'Gehäuseboden' : 'Zifferblatt') : 'Vorschau aktualisiert: ' + cfgSentence() + '. Richtpreis ' + chf(price()) + '.');
     }, viewOnly ? 400 : 800);
-    if (adopted && !viewOnly) showNotice('Konfiguration aktualisiert');
   }
   function showNotice(text) {
     clearTimeout(noticeT); setT('cfgNotice', text);
@@ -450,7 +447,32 @@
     faceFront.addEventListener('mouseleave', function () { rect = null; var g = d.getElementById('glow'); if (g) g.style.opacity = '0'; });
   }
 
-  /* ───────────── Anfrageformular ───────────── */
+  // Zustand der Sitzung wiederherstellen, Modell aus ?modell= vorwählen
+  try { var saved = JSON.parse(sessionStorage.getItem('aw-cfg-state') || 'null'); if (saved && MODELS[saved.model]) { cfg = assign(cfg, saved); cfg.view = 'front'; dialInput.value = cfg.dialText || ''; engInput.value = cfg.engraving || ''; } } catch (e) {}
+  var qm = new URLSearchParams(location.search).get('modell');
+  if (qm && MODELS[qm]) cfg = assign(cfg, modelPatch(qm));
+  function persist() { try { sessionStorage.setItem('aw-cfg-state', JSON.stringify(cfg)); } catch (e) {} }
+  cfgEl.addEventListener('change', persist); dialInput.addEventListener('input', persist); engInput.addEventListener('input', persist);
+  // Übergabe an kontakt.html
+  d.getElementById('adopt').addEventListener('click', function () {
+    persist();
+    var data = { rows: cfgRows(), mini: { strap: STRAPS[cfg.strap].c, kase: cfg.model === 'classico' ? '#a9a6a0' : '#c5ced6', bezel: cfg.model === 'wsport' ? (cfg.bezel === 'keramik' ? '#0e1013' : '#26303b') : '#b9b6b0', dial: dial().c, light: !!dial().light } };
+    try { sessionStorage.setItem('aw-cfg', JSON.stringify(data)); } catch (e) {}
+    showNotice('Konfiguration übernommen');
+    location.href = 'kontakt.html?konfig=1#anfrage';
+  });
+  $$('a[data-model]').forEach(function (a) { a.addEventListener('click', function (ev) { ev.preventDefault(); window.awSetModel(a.getAttribute('data-model')); scrollToId('cfg'); }); });
+  if (location.hash === '#grp-dial') setTimeout(function () { scrollToId('grp-dial'); }, 300);
+  renderCfg();
+  }
+
+  /* ───────────── Anfrageformular (kontakt.html) ───────────── */
+  function initForm() {
+  var stored = null, adopted = false;
+  try { stored = JSON.parse(sessionStorage.getItem('aw-cfg') || 'null'); adopted = !!(stored && stored.rows); } catch (e) {}
+  function cfgRows() { return stored.rows; }
+  var noticeT = null;
+  function showNotice(text) { clearTimeout(noticeT); setT('cfgNotice', text); noticeT = setTimeout(function () { setT('cfgNotice', ''); }, 2600); }
   var F = {};
   ['anlass', 'kundentyp', 'stueck', 'termin', 'nachricht', 'name', 'email', 'tel'].forEach(function (k) { F[k] = d.getElementById('f-' + k); });
   var REQ = ['anlass', 'kundentyp', 'stueck', 'name', 'email'];
@@ -507,11 +529,12 @@
     setIf('adopted', adopted); setIf('notAdopted', !adopted);
     if (!adopted) return;
     setT('cfgFull', cfgRows().map(function (r) { return r.k + ': ' + r.v; }).join(' · '));
-    d.getElementById('mini-strap').setAttribute('fill', STRAPS[cfg.strap].c);
-    d.getElementById('mini-case').setAttribute('fill', cfg.model === 'classico' ? '#a9a6a0' : '#c5ced6');
-    d.getElementById('mini-bezel').setAttribute('stroke', cfg.model === 'wsport' ? (cfg.bezel === 'keramik' ? '#0e1013' : '#26303b') : '#b9b6b0');
-    d.getElementById('mini-dial').setAttribute('fill', dial().c);
-    $$('.mini-hand').forEach(function (l) { l.setAttribute('stroke', dial().light ? '#1c1e22' : '#f3f0e8'); });
+    var mi = stored.mini || {};
+    d.getElementById('mini-strap').setAttribute('fill', mi.strap || '#1f2429');
+    d.getElementById('mini-case').setAttribute('fill', mi.kase || '#c5ced6');
+    d.getElementById('mini-bezel').setAttribute('stroke', mi.bezel || '#b9b6b0');
+    d.getElementById('mini-dial').setAttribute('fill', mi.dial || '#2e5a88');
+    $$('.mini-hand').forEach(function (l) { l.setAttribute('stroke', mi.light ? '#1c1e22' : '#f3f0e8'); });
     var dl = d.getElementById('cfg-rows');
     while (dl.firstChild) dl.removeChild(dl.firstChild);
     cfgRows().forEach(function (w) {
@@ -597,13 +620,6 @@
   });
 
   // Übergaben vom Konfigurator und aus den Geschichten
-  d.getElementById('adopt').addEventListener('click', function () {
-    adopted = true;
-    renderSummary();
-    showNotice('Konfiguration übernommen');
-    formLive('Konfiguration in die Anfrage übernommen.');
-    formFocus();
-  });
   $$('[data-cta]').forEach(function (a) {
     a.addEventListener('click', function (ev) {
       ev.preventDefault();
@@ -618,37 +634,17 @@
       goStep(2, false); scrollToId('anfrage'); focusLater('f-logo');
     });
   });
-  $$('[data-js="to-colors"]').forEach(function (a) {
-    a.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      scrollToId('grp-dial'); focusLater('opt-dial-' + cfg.dial);
-    });
-  });
-
-
-  // Modell-Vorauswahl aus «Modelle»
-  $$('[data-model]').forEach(function (a) {
-    if (a.id === 'cfg') return;
-    a.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      window.awSetModel(a.getAttribute('data-model'));
-      scrollToId('konfigurator');
-    });
-  });
-  // Vorbefüllung (Reservieren, Interesse, Zubehör, Logo-Uhr)
-  $$('[data-prefill]').forEach(function (a) {
-    a.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      var p = {}; try { p = JSON.parse(a.getAttribute('data-prefill')); } catch (e) {}
-      if (p.anlass) { F.anlass.value = p.anlass; clearErr('anlass'); }
-      if (p.nachricht) { F.nachricht.value = p.nachricht; setT('msgCount', F.nachricht.value.length + ' / 2000'); }
-      F.stueck.value = F.stueck.value || '1';
-      if (st.done) { st.done = false; }
-      st.step = 1; renderForm();
-      formLive('Anfrage vorbereitet: ' + (p.anlass || 'Personalisierte Uhr') + '.');
-      formFocus();
-    });
-  });
+  // Vorbefüllung über URL (?anlass=, ?kundentyp=, ?nachricht=, ?konfig=1)
+  var q = new URLSearchParams(location.search);
+  if (q.get('anlass')) { var an = q.get('anlass'); if (!$$('option', F.anlass).some(function (o) { return o.value === an || o.textContent === an; })) { var op = d.createElement('option'); op.textContent = an; F.anlass.appendChild(op); } F.anlass.value = an; }
+  if (q.get('kundentyp')) F.kundentyp.value = q.get('kundentyp');
+  if (q.get('nachricht')) F.nachricht.value = q.get('nachricht').slice(0, 2000);
+  if (q.get('logo')) { st.step = 2; }
+  if (q.get('konfig') && adopted) { formLive('Konfiguration in die Anfrage übernommen.'); setTimeout(function () { showNotice('Konfiguration übernommen'); }, 400); }
+  if ([].some.call(['anlass', 'kundentyp', 'nachricht', 'konfig'], function (k) { return q.get(k); })) setTimeout(function () { scrollToId('anfrage'); focusLater('anfrage-h', 500); }, 150);
+  renderSummary();
+  renderForm();
+  }
 
   /* ───────────── FAQ ───────────── */
   $$('.faq-btn').forEach(function (btn) {
@@ -667,6 +663,6 @@
     });
   });
 
-  renderCfg();
-  renderForm();
+  if (d.getElementById('cfg')) { var cfgEl = d.getElementById('cfg'); initCfg(); }
+  if (d.getElementById('aw-form')) initForm();
 })();
