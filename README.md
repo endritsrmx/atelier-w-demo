@@ -14,7 +14,9 @@ datenschutz.html        Datenschutz (mit Platzhaltern)
 README.md               diese Datei
 
 assets/css/styles.css   Schriften, Grundlagen, Zustände (Menü, Konfigurator, Formular, FAQ),
-                        gerundete Fotos, Intro-Grundgerüst, Hover-Regeln (unten in der Datei)
+                        gerundete Fotos, Intro-Grundgerüst, Header «Metallblau mit Stahlkante»
+                        (Abschnitt «Header», Höhe über --hd: 84 px Desktop, 72 px Handy),
+                        Hover-Regeln (unten in der Datei)
 assets/js/intro.js      Intro-Animation  ← Zeiten hier anpassen (siehe unten)
 assets/js/app.js        Seitenlogik: Menü, aktive Navigation, Ablauf-Linien, Konfigurator,
                         Anfrageformular (Demo, kein Versand), FAQ
