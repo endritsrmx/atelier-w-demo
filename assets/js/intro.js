@@ -1,4 +1,4 @@
-/* Atelier W – Intro
+/* Atelier AW – Intro
  *
  * Ablauf (volle Version, ca. 7,9 s): Gehäuseboden erscheint → Gravur «Für Anna» und Datum → kurze Pause →
  * Uhr dreht sich zum Zifferblatt, Zeiger laufen auf 10:10, «Jede Uhr ein Unikat.» → Logo fliegt in den Header,

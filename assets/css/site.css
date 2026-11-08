@@ -1,4 +1,4 @@
-/* Atelier W – mehrseitige Struktur: aktive Navigation, Seitenkopf, Teaser, CTA */
+/* Atelier AW – mehrseitige Struktur: aktive Navigation, Seitenkopf, Teaser, CTA */
 .hd-links a[aria-current="page"]{color:#ffffff}
 .hd-links a[aria-current="page"] .nav-line{transform:scaleX(1)}
 #aw-menu a[aria-current="page"]{color:#c5d4e4!important;font-style:italic}

@@ -1,4 +1,4 @@
-# Atelier W – Website-Demonstration (statisch)
+# Atelier AW – Website-Demonstration (statisch)
 
 Reines HTML, CSS und JavaScript – ohne Framework, ohne Build-Schritt, ohne externe Dienste.
 `index.html` lässt sich direkt im Browser öffnen oder auf jedem statischen Hosting (z. B. GitHub Pages, auch im Unterordner) betreiben.
