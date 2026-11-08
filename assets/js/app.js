@@ -17,8 +17,8 @@
 
   /* ───────────── Daten ───────────── */
   var FINISH = [{ id: 'poliert', label: 'Poliert' }, { id: 'gebuerstet', label: 'Gebürstet' }, { id: 'pvd', label: 'Schwarz PVD' }];
-  var DIAL = [{ id: 'blau', label: 'Metallblau', mini: '#2e5a88' }, { id: 'silber', label: 'Silber', mini: '#d0d7dd' }, { id: 'graphit', label: 'Graphit', mini: '#3d4248' }, { id: 'elfenbein', label: 'Elfenbein', mini: '#efe9da' }];
-  var HANDS = [{ id: 'dauphine', label: 'Dauphine' }, { id: 'baton', label: 'Baton' }, { id: 'feuille', label: 'Feuille' }];
+  var DIAL = [{ id: 'blau', label: 'Metallblau', mini: '#2e5a88' }, { id: 'smaragd', label: 'Smaragd', mini: '#1fa585' }, { id: 'silber', label: 'Silber', mini: '#d0d7dd' }, { id: 'graphit', label: 'Graphit', mini: '#3d4248' }, { id: 'elfenbein', label: 'Elfenbein', mini: '#efe9da' }];
+  var HANDS = [{ id: 'pfeil', label: 'Pfeil' }, { id: 'dauphine', label: 'Dauphine' }, { id: 'baton', label: 'Baton' }, { id: 'feuille', label: 'Feuille' }];
   var STRAP = [{ id: 'stahl', label: 'Stahl', mini: '#b8c2ca' }, { id: 'leder-braun', label: 'Leder braun', mini: '#6b4a32' }, { id: 'leder-schwarz', label: 'Leder schwarz', mini: '#232325' }, { id: 'kautschuk', label: 'Kautschuk blau', mini: '#23405f' }];
   var DEFAULT = { finish: 'gebuerstet', dial: 'blau', hands: 'dauphine', strap: 'stahl', view: 'front', dialText: '', engraving: '' };
   var STEPS = ['Euer Anlass', 'Gestaltung & Wünsche', 'Kontakt', 'Prüfen'];
@@ -92,7 +92,7 @@
   var cfgEl = d.getElementById('cfg');
   var cfg = assign(DEFAULT, {}), adopted = false, engFocused = false;
   var annT = null, noticeT = null;
-  var dialTextEl = d.getElementById('dial-text'), engLinesEl = d.getElementById('eng-lines'), engEmptyEl = d.getElementById('eng-empty');
+  var dialTextEl = d.getElementById('dial-text'), dialPathEl = d.getElementById('dial-text-path'), engLinesEl = d.getElementById('eng-lines'), engEmptyEl = d.getElementById('eng-empty');
   var dialInput = d.getElementById('cfg-dialtext'), engInput = d.getElementById('cfg-engraving');
   var watchImg = d.getElementById('watch-img');
 
@@ -146,12 +146,12 @@
     setT('viewLabel', front ? 'Zifferblatt' : 'Gehäuseboden');
     // Zifferblatt-Text (Grossschreibung nur in der Vorschau)
     var upper = cfg.dialText.toLocaleUpperCase('de-CH');
-    dialTextEl.textContent = upper;
-    dialTextEl.setAttribute('font-size', Math.max(7, Math.min(15, 150 / (Math.max(1, upper.length) * 0.74))).toFixed(1));
+    dialPathEl.textContent = upper; // läuft auf einem Bogen unter dem Tourbillon
+    dialTextEl.setAttribute('font-size', Math.max(8, Math.min(12, (160 / Math.max(1, upper.length) - 1.2) / 0.62)).toFixed(1));
     // Gravur in bis zu drei Zeilen
     var lines = wrapEngraving(cfg.engraving);
     var longest = Math.max.apply(null, [1].concat(lines.map(function (l) { return l.length; })));
-    var fs = Math.max(10, Math.min(22, 176 / (longest * 0.6))), lh = fs * 1.4, y0 = 300 - (lines.length - 1) * lh / 2 + fs * 0.35;
+    var fs = Math.max(10, Math.min(20, 150 / (longest * 0.6))), lh = fs * 1.4, y0 = 300 - (lines.length - 1) * lh / 2 + fs * 0.35;
     while (engLinesEl.firstChild) engLinesEl.removeChild(engLinesEl.firstChild);
     lines.forEach(function (t, i) {
       var base = { 'text-anchor': 'middle', 'font-family': "'Source Sans 3',sans-serif", 'font-weight': '500', 'font-size': fs.toFixed(1), 'letter-spacing': '1' };
@@ -207,16 +207,10 @@
   d.getElementById('reset-yes').addEventListener('click', function () { setIf('confirmReset', false); doReset(); resetBtn.focus(); });
   d.getElementById('reset-no').addEventListener('click', function () { setIf('confirmReset', false); resetBtn.focus(); });
 
-  // Sekundenzeiger (pausiert bei reduzierter Bewegung, im Hintergrund und ausserhalb des Sichtfelds)
-  var sec = 6, stageVisible = true, secHand = d.getElementById('sec-hand');
+  // Tourbillon: Käfig und Unruh laufen per CSS-Animation; ausserhalb des Sichtfelds pausieren
+  var watchBox = $('.watch-box', cfgEl);
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { stageVisible = es[0].isIntersecting; }).observe($('.watch-box', cfgEl));
-  }
-  if (!reduced) {
-    setInterval(function () {
-      if (d.hidden || !stageVisible || cfg.view !== 'front') return;
-      sec += 1; secHand.style.transform = 'rotate(' + (sec * 6) + 'deg)';
-    }, 1000);
+    new IntersectionObserver(function (es) { watchBox.classList.toggle('is-paused', !es[0].isIntersecting); }).observe(watchBox);
   }
 
   // Lichtschein über dem Zifferblatt (nur Maus/Trackpad)

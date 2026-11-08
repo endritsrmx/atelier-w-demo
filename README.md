@@ -28,6 +28,14 @@ assets/icons/           Favicon (SVG, PNG 32 px) und Apple-Touch-Icon (180 px)
 
 Die meisten Gestaltungswerte (Abstände, Farben, Schriftgrössen) stehen wie im Design-Projekt direkt im HTML.
 
+### Konfigurator-Modell
+
+Kissengehäuse mit zentralem Tourbillon, römischem Zahlenring und gekörntem Zifferblatt – als SVG direkt in `index.html`
+(Vorder- und Rückseite im Abschnitt `#konfigurator`). Jede Auswahl ist eine eigene Ebene (`data-l="dial-smaragd"` usw.);
+welche sichtbar ist, steuert `styles.css` über die Attribute am Element `#cfg` (Abschnitt «Konfigurator-Modell»).
+Dort stehen auch die Tourbillon-Animationen: Käfig `aw-cage` (60 s pro Umdrehung) und Unruh `aw-balance` (0,42 s).
+Ausserhalb des Sichtfelds und bei «Bewegung reduzieren» stehen sie still.
+
 ## Intro
 
 Gesteuert von **`assets/js/intro.js`**. Ganz oben in der Datei steht die Tabelle `T` mit allen Zeiten in Sekunden:
