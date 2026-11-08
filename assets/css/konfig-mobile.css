@@ -36,10 +36,19 @@
   #cfg .opt input{z-index:2}
   #cfg .km-next{display:block;margin:16px 0 0;width:100%;min-height:50px;background:#1f3a5f;border:0;border-radius:2px;color:#f3f0e8;font:600 16px 'Source Sans 3',sans-serif;cursor:pointer}
   #cfg .km-actions{display:none!important;margin-top:4px;padding-top:0!important;border:0!important;gap:0!important}
-  #cfg[data-km-current="4"] .km-actions{display:flex!important}
-  #cfg[data-km-current="4"] .km-next{display:none}
+  #cfg[data-km-last="1"] .km-actions{display:flex!important}
+  #cfg[data-km-last="1"] .km-next{display:none}
   #cfg .km-note{display:block;font-size:11px;line-height:1.45;color:#65717c;margin:14px 0 0}
   #cfg .km-panel input[type=text]{font-size:16px!important}
   #cfg .km-panel > p{font-size:12px!important}
   @keyframes km-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+}
+@media(max-width:767px){
+  #cfg .km-panel[hidden]{display:none!important}
+  #cfg .opt .opt-sub{font-size:10.5px;line-height:1.2}
+  #cfg .cfg-price-v{font-size:32px}
+  #cfg .stage-inner > div:first-child{justify-content:space-between!important}
+  #cfg .stage-inner > div:first-child > p.cfg-price-stage{display:block;font-size:12px!important;text-align:right;max-width:46%}
+  #cfg .stage-inner > div:first-child .vbtn{padding:0 12px!important;font-size:13px!important}
+  #cfg .opt{flex:0 0 84px!important}
 }
