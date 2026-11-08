@@ -34,7 +34,8 @@
   }
   function scrollToId(id) {
     var el = d.getElementById(id); if (!el) return;
-    window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 84, behavior: reduced ? 'auto' : 'smooth' });
+    var hh = (d.querySelector('header') || {}).offsetHeight || 76;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - hh - 8, behavior: reduced ? 'auto' : 'smooth' });
   }
 
   /* ───────────── Menü ───────────── */
