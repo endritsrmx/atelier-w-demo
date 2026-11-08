@@ -36,6 +36,7 @@ if (location.protocol !== 'file:') {
 })();
 </script>
 <link rel="stylesheet" href="assets/css/konfig-mobile.css">
+<link rel="stylesheet" href="assets/css/hero-video.css">
 </head>
 <body>
 <div id="aw-intro"><div class="intro-bg" aria-hidden="true"></div></div>
@@ -73,8 +74,12 @@ if (location.protocol !== 'file:') {
 
 <main id="aw-main">
 <span id="top" style="display:block;scroll-margin-top:var(--hd)"></span>
-<section id="inhalt" tabindex="-1" data-dark="" aria-labelledby="hero-h" style="scroll-margin-top:var(--hd);background:linear-gradient(180deg,#101820,#14283f);color:#f3f0e8;outline:none">
-  <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,112px) clamp(20px,4.5vw,64px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(40px,5vw,80px)">
+<section id="inhalt" tabindex="-1" data-dark="" aria-labelledby="hero-h" class="aw-hero" style="position:relative;overflow:hidden;scroll-margin-top:var(--hd);background:linear-gradient(180deg,#101820,#14283f);color:#f3f0e8;outline:none">
+  <div class="aw-hero-bg" aria-hidden="true">
+    <video class="aw-hero-video" muted autoplay loop playsinline preload="auto" poster="assets/video/hero-poster.jpg" data-src="assets/video/hero.mp4" data-src-mobile="assets/video/hero-960.mp4"></video>
+    <div class="aw-hero-shade"></div>
+  </div>
+  <div class="aw-hero-in" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:clamp(48px,7vw,112px) clamp(20px,4.5vw,64px) 0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(40px,5vw,80px)">
     <div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:28px">
       <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#c5d4e4">Atelier W, Schweiz</p>
       <h1 id="hero-h" style="margin:0;font-family:'Cormorant Garamond',Palatino,'Palatino Linotype',Georgia,serif;font-weight:500;font-size:clamp(3rem,7.4vw,7.2rem);line-height:1;letter-spacing:-0.01em;text-wrap:balance">Was euch verbindet.<br><em style="font-style:italic;color:#c5d4e4">Für immer am Handgelenk.</em></h1>
@@ -84,7 +89,7 @@ if (location.protocol !== 'file:') {
         <a href="#konfigurator" style="display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 26px;border:1px solid rgba(197,212,228,0.55);color:#f3f0e8;text-decoration:none;font-weight:600;font-size:16px;border-radius:2px;transition:border-color 200ms,background 200ms" data-hv="1">Uhr gestalten</a>
       </div>
     </div>
-    <figure style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
+    <figure class="aw-hero-fig" style="flex:1 1 440px;min-width:0;margin:0;display:flex;flex-direction:column;gap:12px">
       <div class="ph-frame" style="position:relative;aspect-ratio:4/5;max-height:78svh;background:#101820;overflow:hidden">
         <img src="assets/img/hero-4x5.webp" srcset="assets/img/hero-4x5-720.webp 720w, assets/img/hero-4x5.webp 1440w" sizes="(min-width: 1000px) 46vw, 100vw" alt="Stahlarmbanduhr mit metallblauem Sonnenschliff-Zifferblatt vor dunklem Hintergrund" fetchpriority="high" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
         <span style="position:absolute;top:14px;left:14px;pointer-events:none;padding:5px 9px;background:rgba(16,24,32,0.86);color:#f3f0e8;font-size:12px;font-weight:600;letter-spacing:0.06em">Beispielbild</span>
@@ -882,5 +887,6 @@ if (location.protocol !== 'file:') {
 <script src="assets/js/slider.js" defer></script>
 <script src="assets/js/app.js" defer></script>
 <script src="assets/js/konfig-mobile.js" defer></script>
+<script src="assets/js/hero-video.js" defer></script>
 </body>
 </html>
